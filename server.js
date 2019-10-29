@@ -43,7 +43,7 @@ app.get('/movie', (req, res) => {
   }
 
   if (avg_vote) {
-    movies = movies.filter((app) => app.avg_vote >= avg_vote);
+    movies = movies.filter((app) => Number(app.avg_vote) >= Number(avg_vote));
   }
 
   res.json(movies);
