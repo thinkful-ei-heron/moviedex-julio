@@ -12,6 +12,7 @@ const API_TOKEN = process.env.API_TOKEN;
 app.use(morgan('common'));
 app.use(cors());
 app.use(helmet());
+app.use(validateBearer);
 
 function validateBearer(req, res, next) {
   const authVal = req.get('Authorization') || '';
@@ -25,22 +26,26 @@ function validateBearer(req, res, next) {
   next();
 }
 
-app.get('/movie', validateBearer, (req, res) => {
+app.get('/movie', (req, res) => {
   let movies = store;
   const { genre, country, avg_vote } = req.query;
+
   if (genre) {
     movies = movies.filter((app) =>
       app.genre.toLowerCase().includes(genre.toLowerCase()),
     );
   }
+
   if (country) {
     movies = movies.filter((app) =>
       app.country.toLowerCase().includes(country.toLowerCase()),
     );
   }
+
   if (avg_vote) {
     movies = movies.filter((app) => app.avg_vote >= avg_vote);
   }
+
   res.json(movies);
 });
 
